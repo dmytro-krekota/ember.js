@@ -103,6 +103,7 @@ module.exports = {
         expectDeprecation: true,
         expectDeprecationAsync: true,
         expectNoDeprecation: true,
+        expectNoDeprecationAsync: true,
         expectWarning: true,
         expectNoWarning: true,
         ignoreAssertion: true,

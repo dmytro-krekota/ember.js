@@ -1,7 +1,6 @@
 import { RenderingTestCase, moduleFor, runDestroy, runTask } from 'internal-test-helpers';
 
 import { EMBER_MODERNIZED_BUILT_IN_COMPONENTS } from '@ember/canary-features';
-import { maybeExpectDeprecation } from 'internal-test-helpers';
 import { action } from '@ember/object';
 import { assign } from '@ember/polyfills';
 import { set } from '@ember/-internals/metal';
@@ -125,12 +124,12 @@ class InputRenderingTest extends RenderingTestCase {
       .join(' ');
     let template = `{{test-component ${typeAttr}${actionAttrs}}}{{input ${typeAttr}${actionAttrs}}}`;
 
-    maybeExpectDeprecation(
-      EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+    expectDeprecation(
       () => {
         this.render(template, { actions });
       },
-      /Passing the `@(touchStart|touchMove|touchEnd|touchCancel|keyDown|keyUp|keyPress|mouseDown|mouseUp|contextMenu|click|doubleClick|focusIn|focusOut|submit|input|change|dragStart|drag|dragEnter|dragLeave|dragOver|drop|dragEnd|mouseEnter|mouseLeave|mouseMove|focus-in|focus-out|key-press|key-up|key-down)` argument to <Input> is deprecated\./
+      /Passing the `@(touchStart|touchMove|touchEnd|touchCancel|keyDown|keyUp|keyPress|mouseDown|mouseUp|contextMenu|click|doubleClick|focusIn|focusOut|submit|input|change|dragStart|drag|dragEnter|dragLeave|dragOver|drop|dragEnd|mouseEnter|mouseLeave|mouseMove|focus-in|focus-out|key-press|key-up|key-down)` argument to <Input> is deprecated\./,
+      EMBER_MODERNIZED_BUILT_IN_COMPONENTS
     );
 
     Object.keys(events).forEach((evt) => this.triggerEvent(evt, null, 'input:first-of-type'));
@@ -189,8 +188,7 @@ moduleFor(
     }
 
     ['@test [DEPRECATED] dynamic attributes']() {
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           this.render(
             `
@@ -219,7 +217,8 @@ moduleFor(
             }
           );
         },
-        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertNotDisabled();
@@ -246,8 +245,7 @@ moduleFor(
       // this.assertAttr('size', '20'); //NOTE: failing in IE (TEST_SUITE=sauce)
       // this.assertAttr('tabindex', '30'); //NOTE: failing in IE (TEST_SUITE=sauce)
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           runTask(() => {
             set(this.context, 'role', 'search');
@@ -261,7 +259,8 @@ moduleFor(
             // set(this.context, 'tabindex', 31); //NOTE: failing in IE (TEST_SUITE=sauce)
           });
         },
-        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertDisabled();
@@ -275,8 +274,7 @@ moduleFor(
       // this.assertAttr('size', '21'); //NOTE: failing in IE (TEST_SUITE=sauce)
       // this.assertAttr('tabindex', '31'); //NOTE: failing in IE (TEST_SUITE=sauce)
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           runTask(() => {
             set(this.context, 'role', 'textbox');
@@ -290,7 +288,8 @@ moduleFor(
             // set(this.context, 'tabindex', 30); //NOTE: failing in IE (TEST_SUITE=sauce)
           });
         },
-        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertNotDisabled();
@@ -306,8 +305,7 @@ moduleFor(
     }
 
     ['@test [DEPRECATED] static attributes']() {
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           this.render(`
             {{input type="text"
@@ -323,7 +321,8 @@ moduleFor(
               tabindex=30
             }}`);
         },
-        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertDisabled();
@@ -463,8 +462,7 @@ moduleFor(
     ['@test sends an action with `{{input key-press=(action "foo")}}` is pressed'](assert) {
       let triggered = 0;
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           this.render(`{{input value=this.value key-press=(action 'foo')}}`, {
             value: 'initial',
@@ -482,7 +480,8 @@ moduleFor(
             },
           });
         },
-        /Passing the `@key-press` argument to <Input> is deprecated\./
+        /Passing the `@key-press` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.triggerEvent('keypress', { key: 'A' });
@@ -504,10 +503,10 @@ moduleFor(
         template: `{{input bubbles=true}}`,
       });
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => this.render(`{{x-parent}}`),
-        'Passing the `@bubbles` argument to <Input> is deprecated.'
+        'Passing the `@bubbles` argument to <Input> is deprecated.',
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.triggerEvent('change');
@@ -518,8 +517,7 @@ moduleFor(
     ['@test triggers `focus-in` when focused'](assert) {
       let wasFocused = false;
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           this.render(`{{input focus-in=(action 'foo')}}`, {
             actions: {
@@ -529,7 +527,8 @@ moduleFor(
             },
           });
         },
-        /Passing the `@focus-in` argument to <Input> is deprecated\./
+        /Passing the `@focus-in` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       runTask(() => {
@@ -636,8 +635,7 @@ moduleFor(
     ) {
       let triggered = 0;
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           this.render(`{{input key-down=(action 'foo')}}`, {
             actions: {
@@ -653,7 +651,8 @@ moduleFor(
             },
           });
         },
-        /Passing the `@key-down` argument to <Input> is deprecated\./
+        /Passing the `@key-down` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.triggerEvent('keydown', { key: 'A' });
@@ -687,8 +686,7 @@ moduleFor(
     }
 
     ['@test sends an action with `{{input key-up=(action "foo")}}` when a key is pressed'](assert) {
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           this.render(`{{input key-up=(action 'foo')}}`, {
             actions: {
@@ -703,7 +701,8 @@ moduleFor(
             },
           });
         },
-        /Passing the `@key-up` argument to <Input> is deprecated\./
+        /Passing the `@key-up` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.triggerEvent('keyup', { key: 'A' });
@@ -721,8 +720,7 @@ moduleFor(
     }
 
     ['@test triggers a method with `{{input key-up=this.didTrigger}}`'](assert) {
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           this.render(`{{input key-up=this.didTrigger}}`, {
             didTrigger: action(function () {
@@ -730,7 +728,8 @@ moduleFor(
             }),
           });
         },
-        /Passing the `@key-up` argument to <Input> is deprecated\./
+        /Passing the `@key-up` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.triggerEvent('keyup', { key: 'A' });
@@ -803,8 +802,7 @@ moduleFor(
   `Components test: {{input type='checkbox'}}`,
   class extends InputRenderingTest {
     ['@test [DEPRECATED] dynamic attributes']() {
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           this.render(
             `{{input
@@ -825,7 +823,8 @@ moduleFor(
             }
           );
         },
-        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertSingleCheckbox();
@@ -844,8 +843,7 @@ moduleFor(
       this.assertAttr('name', 'original-name');
       this.assertAttr('tabindex', '10');
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           runTask(() => {
             set(this.context, 'role', 'radio');
@@ -854,7 +852,8 @@ moduleFor(
             set(this.context, 'tabindex', 11);
           });
         },
-        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertSingleCheckbox();
@@ -864,8 +863,7 @@ moduleFor(
       this.assertAttr('name', 'updated-name');
       this.assertAttr('tabindex', '11');
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           runTask(() => {
             set(this.context, 'role', 'checkbox');
@@ -874,7 +872,8 @@ moduleFor(
             set(this.context, 'tabindex', 10);
           });
         },
-        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|minlength|size|tabindex)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertSingleCheckbox();
@@ -948,8 +947,7 @@ moduleFor(
     }
 
     ['@test [DEPRECATED] with static values']() {
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           this.render(
             `{{input type="checkbox"
@@ -961,7 +959,8 @@ moduleFor(
               checked=false}}`
           );
         },
-        /Passing the `@(elementId|ariaRole|disabled|tabindex|name)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|tabindex|name)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertSingleCheckbox();
@@ -995,8 +994,7 @@ moduleFor(
     ['@test [DEPRECATED] null values']() {
       let attributes = ['role', 'disabled', 'placeholder', 'name', 'maxlength', 'size', 'tabindex'];
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           this.render(
             `{{input type="text"
@@ -1021,7 +1019,8 @@ moduleFor(
             }
           );
         },
-        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|size|tabindex)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|size|tabindex)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertValue('');
@@ -1034,8 +1033,7 @@ moduleFor(
       this.assertAttr('id', 'test-input');
       this.assertAllAttrs(attributes, undefined);
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           runTask(() => {
             set(this.context, 'role', 'search');
@@ -1048,7 +1046,8 @@ moduleFor(
             set(this.context, 'tabindex', 31);
           });
         },
-        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|size|tabindex)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|size|tabindex)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertDisabled();
@@ -1061,8 +1060,7 @@ moduleFor(
       this.assertAttr('size', '21');
       this.assertAttr('tabindex', '31');
 
-      maybeExpectDeprecation(
-        EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+      expectDeprecation(
         () => {
           runTask(() => {
             set(this.context, 'role', null);
@@ -1075,7 +1073,8 @@ moduleFor(
             set(this.context, 'tabindex', null);
           });
         },
-        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|size|tabindex)` argument to <Input> is deprecated\./
+        /Passing the `@(elementId|ariaRole|disabled|placeholder|name|maxlength|size|tabindex)` argument to <Input> is deprecated\./,
+        EMBER_MODERNIZED_BUILT_IN_COMPONENTS
       );
 
       this.assertAttr('disabled', undefined);
@@ -1105,10 +1104,10 @@ moduleFor(
     `[GH#15675] Components test [DEPRECATED]: {{input ${attrs}}}`,
     class extends InputRenderingTest {
       renderInput(value = 25) {
-        maybeExpectDeprecation(
-          EMBER_MODERNIZED_BUILT_IN_COMPONENTS,
+        expectDeprecation(
           () => this.render(`{{input ${attrs.replace('%x', value)}}}`),
-          /Passing the `@(min|max)` argument to <Input> is deprecated\./
+          /Passing the `@(min|max)` argument to <Input> is deprecated\./,
+          EMBER_MODERNIZED_BUILT_IN_COMPONENTS
         );
       }
 
